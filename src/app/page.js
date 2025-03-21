@@ -1,10 +1,35 @@
-import { Button } from "@/components/ui/button";
+import Header from "@/components/Header/Header";
+import CategoryList from "@/components/CategoryList/CategoryList";
+import { Suspense } from "react";
 
-export default function Home() {
+async function getCategories() {
+  try {
+    const response = await fetch(
+      "https://67dbfb6d1fd9e43fe476b875.mockapi.io/api/v1/categories",
+      { next: { revalidate: 300 } }
+    );
+    if (!response.ok) {
+      throw new Error("No se pudieron cargar las categorías");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error cargando categorías:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const categories = await getCategories();
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <h1>Home</h1>
-      <Button>Click me</Button>
+    <div>
+      <Header />
+      <main className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-6">Nuestras categorías</h1>
+        <Suspense fallback={<div>Cargando categorías...</div>}>
+          <CategoryList categories={categories} />
+        </Suspense>
+      </main>
     </div>
   );
 }
