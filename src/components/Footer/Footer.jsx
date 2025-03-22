@@ -2,9 +2,18 @@
 
 import { Facebook, Instagram, Twitter } from "@/components/icons";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { logout, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.push('/login');
+  };
 
   return (
     <footer className="bg-[#1A7F96] text-white py-10 mt-auto">
@@ -20,7 +29,7 @@ const Footer = () => {
           <div className="mb-6 md:mb-0">
             <h3 className="text-xl font-bold mb-4 font-montserrat">Enlaces rápidos</h3>
             <ul className="space-y-2">
-              <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Inicio</Link></li>
+              <li><Link href="/" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Inicio</Link></li>
               <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Productos</Link></li>
               <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Ofertas</Link></li>
               <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Contacto</Link></li>
@@ -30,16 +39,24 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-4 font-montserrat">Mi cuenta</h3>
             <ul className="space-y-2 mb-4">
-              <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Mi perfil</Link></li>
-              <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Mis pedidos</Link></li>
-              <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Favoritos</Link></li>
+              {isAuthenticated() ? (
+                <>
+                  <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Mi perfil</Link></li>
+                  <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Mis pedidos</Link></li>
+                  <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Favoritos</Link></li>
+                </>
+              ) : (
+                <li><Link href="/login" className="text-white/80 hover:text-white hover:underline transition-colors font-montserrat text-sm">Iniciar sesión</Link></li>
+              )}
             </ul>
-            <button 
-              className="bg-white text-[#1A7F96] hover:bg-white/90 font-bold py-2 px-5 rounded-md transition-colors font-montserrat text-sm"
-              onClick={() => console.log("Cerrar sesión")}
-            >
-              Cerrar sesión
-            </button>
+            {isAuthenticated() && (
+              <button 
+                className="bg-white text-[#1A7F96] hover:bg-white/90 font-bold py-2 px-5 rounded-md transition-colors font-montserrat text-sm"
+                onClick={handleLogout}
+              >
+                Cerrar sesión
+              </button>
+            )}
           </div>
         </div>
         

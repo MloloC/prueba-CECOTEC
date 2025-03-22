@@ -1,8 +1,7 @@
 import Link from "next/link";
-import CategoryItem from "./CategoryItem";
+import CategoryItem from "../CategoryItem/CategoryItem";
 
 const CategoryList = ({ categories = [] }) => {
-  console.log(categories, "<== categories");
   return (
     <div className="my-8 font-montserrat">
       {categories.length === 0 ? (
