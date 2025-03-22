@@ -4,8 +4,9 @@ const nextConfig = {
     // Evita el uso del paquete @tailwindcss/postcss
     serverComponentsExternalPackages: [],
   },
-  // Desactivar optimizaciones que puedan causar problemas
-  swcMinify: false
+  images: {
+    domains: ['media.cecotec.cloud'],
+  }
 };
 
 module.exports = nextConfig; 

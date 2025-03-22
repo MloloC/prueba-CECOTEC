@@ -1,12 +1,17 @@
+import Image from "next/image";
+
 const CategoryItem = ({ category }) => {
   return (
     <div className="flex bg-gray-100 rounded-lg overflow-hidden shadow-sm h-[170px]">
       <div className="w-[40%] flex-shrink-0 flex items-center justify-center p-2">
         {category.image && (
-          <img 
+          <Image 
             src={category.image} 
             alt={category.name} 
             className="h-full w-auto object-contain max-w-full"
+            width={154}
+            height={154}
+            
           />
         )}
       </div>

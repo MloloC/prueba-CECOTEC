@@ -1,4 +1,3 @@
-import Header from "@/components/Header/Header";
 import CategoryList from "@/components/CategoryList/CategoryList";
 import { Suspense } from "react";
 
@@ -23,7 +22,6 @@ export default async function Home() {
 
   return (
     <div>
-      <Header />
       <main className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-6">Nuestras categorías</h1>
         <Suspense fallback={<div>Cargando categorías...</div>}>
