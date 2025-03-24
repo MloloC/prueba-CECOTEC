@@ -3,9 +3,25 @@
 @tailwind utilities;
 
 @layer base {
+  html,
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  button,
+  a,
+  input,
+  textarea,
+  select,
+  li {
+    font-family: var(--font-montserrat);
+  }
   body {
-    @apply bg-[var(--background)] text-[var(--foreground)];
-    font-family: Arial, Helvetica, sans-serif;
+    @apply bg-background text-foreground;
   }
   :root {
     --background: 0 0% 100%;
@@ -62,13 +78,8 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }

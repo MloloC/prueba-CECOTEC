@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} font-montserrat antialiased min-h-screen flex flex-col`}>
+      <body className={`${montserrat.variable} antialiased min-h-screen flex flex-col`}>
         <AuthProvider>
           <Header />
           <div className="flex-grow">
