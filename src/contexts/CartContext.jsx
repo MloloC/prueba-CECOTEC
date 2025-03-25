@@ -19,7 +19,6 @@ export const CartProvider = ({ children }) => {
   const [lastAddedProduct, setLastAddedProduct] = useState(null);
   const [isCartReady, setIsCartReady] = useState(false);
 
-  // Cargar el carrito del localStorage al iniciar
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
@@ -33,7 +32,6 @@ export const CartProvider = ({ children }) => {
     setIsCartReady(true);
   }, []);
 
-  // Guardar en localStorage cada vez que cambia el carrito
   useEffect(() => {
     if (isCartReady) {
       localStorage.setItem("cart", JSON.stringify(cart));
@@ -42,9 +40,9 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product) => {
     setCart((prevCart) => {
-      // Comprobar si el producto ya está en el carrito
+      // Comprobar si el producto ya está en el carrito por nombre
       const existingProductIndex = prevCart.findIndex(
-        (item) => item.id === product.id
+        (item) => item.name === product.name
       );
 
       let newCart;
@@ -67,10 +65,6 @@ export const CartProvider = ({ children }) => {
     // Guardar el último producto añadido para mostrarlo en el modal
     setLastAddedProduct(product);
     setShowModal(true);
-
-    setTimeout(() => {
-      setShowModal(false);
-    }, 5000);
   };
 
   // Eliminar un producto del carrito

@@ -43,7 +43,6 @@ const Footer = () => {
                 <>
                   <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors text-sm">Mi perfil</Link></li>
                   <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors text-sm">Mis pedidos</Link></li>
-                  <li><Link href="#" className="text-white/80 hover:text-white hover:underline transition-colors text-sm">Favoritos</Link></li>
                 </>
               ) : (
                 <li><Link href="/login" className="text-white/80 hover:text-white hover:underline transition-colors text-sm">Iniciar sesión</Link></li>

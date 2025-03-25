@@ -1,13 +1,16 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import AddToCartButton from "@/components/AddToCartButton/AddToCartButton";
+import { Check, Close } from "@/components/icons";
 import { 
   slugToReadableName, 
   getProductPriceInfo, 
   hasLowStock, 
-  hasShippingInfo
+  hasShippingInfo, 
+  getSoldText,
+  isOutOfStock
 } from "@/utils/formatters";
 import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
-import { Check } from "@/components/icons";
 
 // Configuración para ISR
 export const dynamic = "force-dynamic";
@@ -49,6 +52,7 @@ export default async function ProductPage({ params }) {
   // Verificaciones de estado
   const productHasLowStock = hasLowStock(product);
   const productHasShipping = hasShippingInfo(product);
+  const productIsOutOfStock = isOutOfStock(product);
   
   // Configurar breadcrumbs
   const breadcrumbItems = [
@@ -102,10 +106,29 @@ export default async function ProductPage({ params }) {
                 </span>
               )}
             </div>
+
+            {/* Ventas */}
+            {product.sold > 0 && (
+              <div className="mt-2 text-sm text-gray-600">
+                {product.sold} {getSoldText(product.sold)}
+              </div>
+            )}
           </div>
 
-          {/* Datos condicionales */}
+          {/* Stock y envío */}
           <div className="space-y-2 mb-6">
+            {!productIsOutOfStock ? (
+              <p className="text-green-600 flex items-center">
+                <Check size={20} strokeWidth={2} className="mr-2" />
+                En stock
+              </p>
+            ) : (
+              <p className="text-red-600 flex items-center">
+                <Close size={20} strokeWidth={2} className="mr-2" />
+                Agotado
+              </p>
+            )}
+
             {/* Stock bajo */}
             {productHasLowStock && (
               <p className="text-amber-600 font-medium">
@@ -122,10 +145,11 @@ export default async function ProductPage({ params }) {
             )}
           </div>
 
-          <div className="mt-8">
-            <button className="w-full bg-brand text-white py-3 px-4 rounded-md hover:bg-brand-dark transition-colors">
-              Añadir al carrito
-            </button>
+          <div className="space-y-3">
+            <AddToCartButton 
+              product={product} 
+              disabled={productIsOutOfStock}
+            />
           </div>
         </div>
       </div>

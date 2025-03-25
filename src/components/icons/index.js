@@ -5,4 +5,7 @@ export { default as Cart } from './Cart';
 export { default as Menu } from './Menu';
 export { default as Close } from './Close';
 export { default as Check } from './Check';
-export { default as ChevronDown } from './ChevronDown'; 
+export { default as ChevronDown } from './ChevronDown';
+export { default as Minus } from './Minus';
+export { default as Plus } from './Plus';
+export { default as Trash2 } from './Trash2'; 

@@ -33,7 +33,10 @@ const Header = () => {
           
           <div className="hidden md:flex items-center space-x-4">
             <div className="relative">
-              <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+              <button 
+                onClick={() => router.push('/carrito')}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
                 <Cart size={24} strokeWidth={1.5} className="text-gray-700" />
                 {cartItemsCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">

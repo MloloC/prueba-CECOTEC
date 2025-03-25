@@ -3,9 +3,11 @@
 import { useCart } from "@/contexts/CartContext";
 import Image from "next/image";
 import { Close } from "@/components/icons";
+import { useRouter } from "next/navigation";
 
 const CartModal = () => {
   const { showModal, setShowModal, lastAddedProduct } = useCart();
+  const router = useRouter();
 
   if (!showModal || !lastAddedProduct) return null;
 
@@ -62,8 +64,7 @@ const CartModal = () => {
             <button
               onClick={() => {
                 setShowModal(false);
-                // Aquí podrías añadir la navegación al carrito si lo necesitas
-                // router.push('/cart');
+                router.push('/carrito');
               }}
               className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-brand hover:bg-brand-dark"
             >
