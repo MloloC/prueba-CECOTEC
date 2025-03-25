@@ -1,37 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Check } from "@/components/icons";
+import { 
+  getProductPriceInfo, 
+  hasLowStock, 
+  hasShippingInfo, 
+  getSoldText,
+  isOutOfStock
+} from "@/utils/formatters";
 
-const ProductCard = ({ product }) => {
-  const originalPrice = parseFloat(product.pricing.price);
-  const discountRate = parseFloat(product.pricing.discountRate);
-  const hasDiscount = discountRate > 0;
-  const discountedPrice = hasDiscount
-    ? (originalPrice * (1 - discountRate)).toFixed(2)
-    : originalPrice.toFixed(2);
-
-  const formattedOriginalPrice = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: product.pricing.currency,
-  }).format(originalPrice);
-
-  const formattedDiscountedPrice = hasDiscount
-    ? new Intl.NumberFormat("es-ES", {
-        style: "currency",
-        currency: product.pricing.currency,
-      }).format(discountedPrice)
-    : null;
-
-  const discountPercentage = hasDiscount
-    ? Math.round(discountRate * 100)
-    : null;
-    
-  // Verificar si hay stock bajo (menor a 10)
-  const hasLowStock = product.pricing.isInStock > 0 && product.pricing.isInStock < 10;
-  // Verificar si hay info de envío rápido
-  const hasShipping = !!product.shippingShortDescription;
+const ProductCard = ({ product, categorySlug }) => {
+  // Obtener información de precios formateada
+  const priceInfo = getProductPriceInfo(product);
+  
+  // Verificaciones de estado
+  const productHasLowStock = hasLowStock(product);
+  const productHasShipping = hasShippingInfo(product);
+  const productIsOutOfStock = isOutOfStock(product);
 
   return (
-    <Link href={`/producto/${product.slug}`} className="group">
+    <Link href={`/${categorySlug}/${product.slug}`} className="group">
       <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 h-full flex flex-col">
         <div className="relative pt-[100%] bg-gray-100">
           <Image
@@ -41,12 +29,12 @@ const ProductCard = ({ product }) => {
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             className="object-contain p-4"
           />
-          {hasDiscount && (
+          {priceInfo.hasDiscount && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-              -{discountPercentage}%
+              -{priceInfo.discountPercentage}%
             </div>
           )}
-          {product.pricing.isInStock <= 0 && (
+          {productIsOutOfStock && (
             <div className="absolute bottom-0 left-0 right-0 bg-gray-800 text-white text-xs font-bold px-2 py-1 text-center">
               Agotado
             </div>
@@ -60,36 +48,41 @@ const ProductCard = ({ product }) => {
 
           <div className="mt-auto">
             <div className="flex flex-col">
-              {hasDiscount ? (
+              {priceInfo.hasDiscount ? (
                 <>
                   <span className="text-sm text-gray-500 line-through mb-1">
-                    {formattedOriginalPrice}
+                    {priceInfo.formattedOriginalPrice}
                   </span>
                   <span className="font-bold text-lg text-red-600">
-                    {formattedDiscountedPrice}
+                    {priceInfo.formattedDiscountedPrice}
                   </span>
                 </>
               ) : (
                 <span className="font-bold text-lg text-gray-900">
-                  {formattedOriginalPrice}
+                  {priceInfo.formattedOriginalPrice}
                 </span>
               )}
             </div>
             
+            {/* Indicador de ventas */}
+            {product.sold > 0 && (
+              <div className="mt-1 text-xs text-gray-600">
+                {product.sold} {getSoldText(product.sold)}
+              </div>
+            )}
+            
             {/* Stock bajo */}
-            {hasLowStock && (
+            {productHasLowStock && (
               <p className="text-xs text-amber-600 mt-2 font-medium">
                 ¡Solo quedan {product.pricing.isInStock} unidades!
               </p>
             )}
 
             {/* Envío rápido */}
-            {hasShipping && (
+            {productHasShipping && (
               <p className="text-sm text-green-600 mt-1 flex items-center">
                 <span className="mr-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="inline">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <Check size={16} strokeWidth={2} />
                 </span>
                 Envío en 24-72 horas
               </p>

@@ -1,13 +1,17 @@
 import Link from "next/link";
-import ProductCard from "@/components/ProductCard/ProductCard";
+import ProductGrid from "@/components/ProductGrid/ProductGrid";
 import { notFound } from "next/navigation";
+import { slugToReadableName } from "@/utils/formatters";
+import Breadcrumbs from "@/components/Breadcrumbs/Breadcrumbs";
 
-// SSR
+// Configuración para SSR con revalidación
+export const revalidate = 60;
+
 async function getProductsByCategory(categorySlug) {
   try {
     const response = await fetch(
       `https://67dbfb6d1fd9e43fe476b875.mockapi.io/api/v1/${categorySlug}`,
-      { next: { revalidate: 300 } }
+      { next: { revalidate: 60 } }
     );
 
     if (!response.ok) {
@@ -23,39 +27,30 @@ async function getProductsByCategory(categorySlug) {
 
 export default async function CategoryPage({ params }) {
   const { slug } = await params;
+
   const products = await getProductsByCategory(slug);
 
-  // Si no hay productos o la respuesta es null, activamos la página not-found
   if (!products || products.length === 0) {
     notFound();
   }
 
-  // Transformar slug "Robots Aspiradores")
-  const categoryName = slug
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-
+  // Transformar slug a nombre legible
+  const categoryName = slugToReadableName(slug);
+  
+  // Configurar breadcrumbs
+  const breadcrumbItems = [
+    { label: "Inicio", href: "/" },
+    { label: categoryName }
+  ];
+  
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">
-          {categoryName}
-        </h1>
-        <div className="flex items-center text-sm text-gray-500">
-          <Link href="/" className="hover:text-brand">
-            Inicio
-          </Link>
-          <span className="mx-2">/</span>
-          <span>{categoryName}</span>
-        </div>
+        <h1 className="text-3xl font-bold mb-2">{categoryName}</h1>
+        <Breadcrumbs items={breadcrumbItems} />
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ProductGrid initialProducts={products} categorySlug={slug} />
     </div>
   );
-} 
+}

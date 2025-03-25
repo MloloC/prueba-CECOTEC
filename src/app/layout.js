@@ -3,6 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
+import CartModal from "@/components/CartModal/CartModal";
 import { Toaster } from "@/components/ui/toaster";
 
 const montserrat = Montserrat({
@@ -22,12 +24,15 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${montserrat.variable} antialiased min-h-screen flex flex-col`}>
         <AuthProvider>
-          <Header />
-          <div className="flex-grow">
-            {children}
-          </div>
-          <Footer />
-          <Toaster />
+          <CartProvider>
+            <Header />
+            <div className="flex-grow">
+              {children}
+            </div>
+            <Footer />
+            <CartModal />
+            <Toaster />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>
